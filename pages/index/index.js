@@ -3,6 +3,14 @@
 const app = getApp()
 
 Page({
+  clickMe() {
+    this.setData({ msg: 'Hello World' })
+  },
+  clickTo() {
+    wx.navigateTo({
+      url: 'home/home'
+    })
+  },
   data: {
     motto: 'Hello World',
     userInfo: {},

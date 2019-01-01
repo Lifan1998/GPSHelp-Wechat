@@ -1,0 +1,53 @@
+/* pages/index/home/home.wxss */
+page{
+	height: 100%;
+}
+
+.confirmBtn{
+  position: absolute;
+  background-color: rgb(255, 255, 0);
+  border-radius: 90rem;
+  left: 35vw;
+  top: 60vh;
+  width: 30vw;
+  height: 30vw;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;  
+  
+}
+.confirmText{
+  position: relative;
+}
+.confirmType{
+  position: relative;
+}
+
+.currentLocation{
+  position: absolute;
+  display: flex;
+  top: 70vh;
+  left: 83vw;
+  width: 10vw;
+  height: 10vw;
+}
+.location{
+  position: absolute;
+  border-radius: 10px;
+  top: 83vh;
+  width: 100%;
+  margin: 5px;
+}
+
+.eventLocation{
+  background-color: white;
+  padding: 10px;
+  
+}
+
+.aidLocation{
+  background-color: white;
+  padding: 10px;
+}
+

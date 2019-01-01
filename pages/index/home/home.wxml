@@ -1,0 +1,25 @@
+<!--pages/index/home/home.wxml-->
+<map
+  id="map"
+  longitude="{{longitude}}"
+  latitude="{{latitude}}"
+  scale="14"
+  bindcontroltap="controltap"
+  markers="{{markers}}"
+  bindmarkertap="markertap"
+  polyline="{{polyline}}"
+  bindregionchange="regionchange"
+  show-location
+  style="width: 100%; height: 100%;"
+>
+  <cover-view class='confirmBtn'>
+    <cover-view class='confirmText'>一键呼救
+      <cover-view class='comfirmType'>110</cover-view>
+    </cover-view>
+  </cover-view>
+  <cover-image class='currentLocation' src='/image/location-control.png' bindtap="moveToLocation"></cover-image>
+  <cover-view class='location'>
+    <cover-view class='eventLocation'>· 南京工程学院-三号门</cover-view>
+    <cover-view class='aidLocation'>· 南京市公安局江宁分局</cover-view>
+  </cover-view>
+</map>
