@@ -12,14 +12,20 @@
   show-location
   style="width: 100%; height: 100%;"
 >
-  <cover-view class='confirmBtn'>
-    <cover-view class='confirmText'>一键呼救
-      <cover-view class='comfirmType'>110</cover-view>
+  <cover-view class='types' bindtap="type">
+     <block wx:for="{{buttons}}" wx:key="buttons">
+    <button class='{{item.checked?"checked_button":"normal_button"}}' data-id='{{item.id}}' bindtap='radioButtonTap'>{{item.name}}</button>
+  </block>
+  </cover-view>
+  
+  <cover-view class='confirmBtn' bindtap="confirm">
+    <cover-view class='confirmText' >{{ label }}
+      <cover-view class='comfirmType' >{{ msg }}</cover-view>
     </cover-view>
   </cover-view>
-  <cover-image class='currentLocation' src='/image/location-control.png' bindtap="moveToLocation"></cover-image>
-  <cover-view class='location'>
-    <cover-view class='eventLocation'>· 南京工程学院-三号门</cover-view>
-    <cover-view class='aidLocation'>· 南京市公安局江宁分局</cover-view>
-  </cover-view>
+  <cover-image class='currentLocation' src='/image/location-3.jpg' bindtap="moveToLocation"></cover-image>
 </map>
+<cover-view class='bottom'>
+<cover-view class='eventLocation' bindtap='type'>· {{msgEventLocation}}</cover-view>
+    <cover-view class='aidLocation'bindtap="type">· {{msgAidLocation}}</cover-view>
+</cover-view>
