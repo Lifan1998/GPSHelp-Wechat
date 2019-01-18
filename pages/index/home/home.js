@@ -6,7 +6,8 @@ var qqmapsdk;
  * 此marker存储所有标记
  * 一般第一个为自身坐标，为待救援点
  * 后续为所有相关施救点
- * 最后为系统推荐施救方
+ * 最后为系统推荐施救方/用户手动选择
+ * 
  */
 var markers = [];
 /**
@@ -48,6 +49,29 @@ Page({
   },
   markertap(e) {
     console.log(e.markerId)
+    //标记出系统推荐
+    for (let i = 0; i < markers.length-1; i++) {
+      if (e.markerId == markers[i].id) {
+        let marker = {
+          iconPath: "/image/marker-1.png",
+          id: markers[i].id.id,
+          latitude: markers[i].latitude,
+          longitude: markers[i].longitude,
+          height: 40,
+          width: 40,
+          label: {
+            content: markers[i].callout.content
+          }
+        }
+        markers[markers.length - 1] = marker
+      }
+    }
+   
+    this.setData({
+      markers: markers,
+      msgAidLocation: markers[markers.length - 1].label.content
+    })
+
   },
   controltap(e) {
     console.log(e.controlId)
@@ -62,32 +86,15 @@ Page({
     this.setData({
       buttons: this.data.buttons,
     })
-    var that = this
+   
     // 实例化腾讯地图API核心类
     qqmapsdk = new QQMapWX({
       key: 'PTVBZ-O3734-C6SUY-XFJS3-DJ3GV-Y3FTY' // 必填
     });
-  
-    //获取当前位置坐标
-    wx.getLocation({
-      type: 'wgs84',
-      success: function (res) {
-        //根据坐标获取当前位置名称，显示在顶部:腾讯地图逆地址解析
-        qqmapsdk.reverseGeocoder({
-          location: {
-            latitude: res.latitude,
-            longitude: res.longitude
-          },
-          success: function (addressRes) {
-            var address = addressRes.result.address
-            console.log(address)
-            that.setData({
-              msgEventLocation:address
-            })
-          }
-        })
-      }
-    })
+    if (markers.length == 0) {
+      this.getMyMarker()
+    }
+    
   },
 
   /**
@@ -104,20 +111,8 @@ Page({
    */
   onShow: function () {
     console.log("生命周期函数--监听页面显示")
-    let that = this
     
-    wx.getLocation({
-      type: 'gcj02',
-      success(res) {
-        console.log(res)
-        that.setData({
-          longitude: res.longitude,
-          latitude: res.latitude
-        })
-        that.getMarkers()
-      }
-    })
-    that.initAllMarkers()
+     
   },
 
   /**
@@ -125,6 +120,7 @@ Page({
    */
   onHide: function () {
     console.log("生命周期函数--监听页面隐藏")
+    this.saveData()
   },
 
   /**
@@ -132,6 +128,7 @@ Page({
    */
   onUnload: function () {
     console.log("生命周期函数--监听页面卸载")
+    this.saveData()
   },
 
   /**
@@ -158,17 +155,33 @@ Page({
    * 获取用户坐标坐标
    * 并标记为待救援点
    */
-  getMarkers(){
-    console.log("getMarkers()")
-    let marker = {
-      iconPath: "/image/location.png",
-      id: 0,
-      latitude: this.data.latitude,
-      longitude: this.data.longitude,
-      width: 40,
-      height: 40
-    };
-    markers.push(marker)
+  getMyMarker(){
+    let _this = this
+    wx.getLocation({
+      type: 'gcj02',
+      success(res) {
+        console.log(res)
+        _this.setData({
+          longitude: res.longitude,
+          latitude: res.latitude
+        }) 
+        let marker = {
+          iconPath: "/image/location.png",
+          id: 0,
+          latitude: res.latitude,
+          longitude: res.longitude,
+          label:{
+            content:""
+          },
+          width: 40,
+          height: 40
+        };
+        markers.push(marker)
+        _this.getAddressName()
+      }
+    })
+    this.initAllMarkers()
+    
   },
   /**
    * 确认呼救
@@ -177,15 +190,16 @@ Page({
     console.log("confirm()" )
     if(help){
       this.setData({
-        label: '已取消',
+        label: '一键求救',
         msg: '110',
-        
       })
       help = false
+      //清除定时器
       clearInterval(timer)
       return
     } 
     help = true
+    //开启定时器
     timer = setInterval(this.timer, 1000);
     this.setData({ 
       label:'正在呼救'+this.data.msg,
@@ -203,10 +217,21 @@ Page({
    * 获取所有可选救援点
    */
   initAllMarkers(){
+    markers= markers.slice(0,1)
     let that = this
+    let key ;
+    if(this.data.msg == 110){
+      key = "派出所"
+    }
+    if (this.data.msg == 120) {
+      key = "医院"
+    }
+    if (this.data.msg == 119) {
+      key = "消防大队"
+    }
     // 调用接口
     qqmapsdk.search({
-      keyword: '派出所',
+      keyword: key,
       success: function (res) {
         
         let array = res.data
@@ -242,6 +267,7 @@ Page({
   },
   /**
    * 获取最优救援点
+   * 这里暂定为搜索结果第一个
    */
   getRecommendMarkers(array){
     console.log(array[0])
@@ -256,14 +282,38 @@ Page({
         content: array[0].title
       }
     };
+   
+    //标记出系统推荐
+    for(let i=0;i<markers.length;i++){
+      if(marker.id==markers[i].id){
+        markers[i].iconPath = "/image/location-1.png"
+      }
+    }
     markers.push(marker)
     this.setData({
       markers: markers,
       msgAidLocation: array[0].title
     })
   },
-  type(){
-    console.log("110")
+  /**
+   * 手动选择地理位置
+   */
+  chooseEventLocation(){
+    console.log(this.data.msgEventLocation)
+    let _this = this
+    wx.chooseLocation({
+      success:function(res){
+        console.log(res)
+        markers[0].latitude = res.latitude,
+        markers[0].longitude = res.longitude,
+        markers[0].label.content = name
+        _this.setData({
+          msgEventLocation:res.name,
+          markers:markers
+        })
+      }
+    })
+
   },
   /**
    * 单选按钮实现
@@ -289,14 +339,13 @@ Page({
       buttons: this.data.buttons,
       msg: name
     })
+    this.initAllMarkers()
   },
   /**
    * 定时器回调方法
    */
   timer(){
-    
     sec = sec +1
-    
     if(sec==60) {
       min = min+1
       sec = 0
@@ -306,6 +355,65 @@ Page({
     if(min<10) s1 = "0"+min
     this.setData({
       msg: s1+":"+s
+    })
+    //手动测试请求成功
+    if(sec==2){
+      //网络请求
+      //请求成功清除定时器
+      clearInterval(timer)
+      //打开导航页面，在该任务完成之前，主界面封锁
+      wx.redirectTo({
+        url: '/pages/navigate/navigate'
+      })
+    }
+  },
+  /**
+   * 请求呼救
+   */
+  startHelp(){
+    //网络请求
+
+    //请求成功清除定时器
+    clearInterval(timer)
+    //打开导航页面，在该任务完成之前，主界面封锁
+    wx.redirectTo({
+      url: '../pages/navigate/navigate'
+    })
+
+  },
+  /**
+   * 页面隐藏时调用
+   * 页面卸载时调用（请求成功，打开新页面）
+   */
+  saveData(){
+   
+    wx.setStorageSync("markers", markers)
+   
+  },
+  getAddressName(){
+    var that = this
+    //获取当前位置坐标
+    wx.getLocation({
+      //wgs84
+      type: 'gcj02',
+      success: function (res) {
+        //根据坐标获取当前位置名称，显示在顶部:腾讯地图逆地址解析
+        qqmapsdk.reverseGeocoder({
+          location: {
+            latitude: res.latitude,
+            longitude: res.longitude
+          },
+          success: function (addressRes) {
+            console.log(addressRes)
+            var address = addressRes.result.address
+            console.log(address)
+            markers[0].label.content = address
+            that.setData({
+              msgEventLocation: address
+            })
+          }
+        })
+      }
     })
   }
   

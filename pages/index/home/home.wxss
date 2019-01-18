@@ -21,9 +21,12 @@ page{
 }
 .confirmText{
   position: relative;
+  font-size: 40rpx;
+
 }
 .confirmType{
   position: relative;
+  font-size: 40rpx;
 }
 
 .currentLocation{
@@ -39,11 +42,15 @@ page{
 
 .eventLocation{
   background-color: white;
+  font-size: 40rpx;
+  padding: 10rpx;
 
 }
 
 .aidLocation{
   background-color: white;
+  font-size: 40rpx;
+  padding: 10rpx;
 }
 .bottom{
   background: white;
@@ -52,12 +59,13 @@ page{
   display: flex;
   flex-direction: column;
   padding: 20rpx;
-  border-radius: 15rem;
+  
 }
 .type{
   background: white;
   border: 10rpx;
-  font-size: 15;
+  font-size: 45rpx;
+  font-weight: bold;
   width: 100px;
   margin: 20rpx;
   border-bottom-color: blue;

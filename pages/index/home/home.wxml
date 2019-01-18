@@ -26,6 +26,6 @@
   <cover-image class='currentLocation' src='/image/location-3.jpg' bindtap="moveToLocation"></cover-image>
 </map>
 <cover-view class='bottom'>
-<cover-view class='eventLocation' bindtap='type'>· {{msgEventLocation}}</cover-view>
-    <cover-view class='aidLocation'bindtap="type">· {{msgAidLocation}}</cover-view>
+<cover-view class='eventLocation' bindtap='chooseEventLocation'>· {{msgEventLocation}}</cover-view>
+    <cover-view class='aidLocation'>· {{msgAidLocation}}</cover-view>
 </cover-view>

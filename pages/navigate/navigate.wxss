@@ -1,0 +1,70 @@
+/* pages/navigate/navigate.wxss */
+Page{
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.bottom{
+  background: white;
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx;
+  
+}
+
+.eventLocation{
+  background-color: white;
+  font-size: 40rpx;
+  padding: 10rpx;
+}
+
+.aidLocation{
+  background-color: white;
+  font-size: 40rpx;
+  padding: 10rpx;
+}
+.chat_img{
+  position: absolute;
+  display: flex;
+  top: 70vh;
+  left: 83vw;
+  width: 15vw;
+  height: 15vw;
+
+}
+.currentLocation{
+  position: absolute;
+  background-color: white;
+  display: flex;
+  top: 60vh;
+  left: 86vw;
+  width: 10vw;
+  height: 10vw;
+}
+.hint{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  background: white;
+  margin: 3vw;
+  padding: 3vw;
+  width: 88vw;
+
+}
+.hintMsg{
+  background: orange;
+  font-size: 45rpx;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  width: 80vw;
+}
+.distance{
+  width: 90vw;
+  text-align :right;
+  color:blue;
+  font-size: 35rpx;
+}
