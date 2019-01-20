@@ -28,6 +28,10 @@ var min = 0;
  * 关闭时要用
  */
 var timer ;
+/**
+ * 呼救类型
+ */
+var type;
 Page({
   
   /**
@@ -83,8 +87,9 @@ Page({
   onLoad: function (options) {
     console.log("生命周期函数--监听页面加载")
     this.data.buttons[0].checked = true;
+    type = '110'
     this.setData({
-      buttons: this.data.buttons,
+      buttons: this.data.buttons
     })
    
     // 实例化腾讯地图API核心类
@@ -187,11 +192,12 @@ Page({
    * 确认呼救
    */
   confirm(){
+    
     console.log("confirm()" )
     if(help){
       this.setData({
         label: '一键求救',
-        msg: '110',
+        msg: type,
       })
       help = false
       //清除定时器
@@ -306,7 +312,7 @@ Page({
         console.log(res)
         markers[0].latitude = res.latitude,
         markers[0].longitude = res.longitude,
-        markers[0].label.content = name
+        markers[0].label.content = res.name
         _this.setData({
           msgEventLocation:res.name,
           markers:markers
@@ -320,6 +326,7 @@ Page({
    */
   radioButtonTap: function (e) {
     console.log(e)
+   
     let id = e.currentTarget.dataset.id
     let name 
     console.log(id)
@@ -335,6 +342,7 @@ Page({
         this.data.buttons[i].checked = false;
       }
     }
+    type = name
     this.setData({
       buttons: this.data.buttons,
       msg: name
@@ -363,7 +371,7 @@ Page({
       clearInterval(timer)
       //打开导航页面，在该任务完成之前，主界面封锁
       wx.redirectTo({
-        url: '/pages/navigate/navigate'
+        url: '/pages/navigate/navigate?msg='+type
       })
     }
   },
@@ -377,7 +385,7 @@ Page({
     clearInterval(timer)
     //打开导航页面，在该任务完成之前，主界面封锁
     wx.redirectTo({
-      url: '../pages/navigate/navigate'
+      url: '../pages/navigate/navigate?msg='+type
     })
 
   },

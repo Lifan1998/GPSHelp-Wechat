@@ -11,9 +11,12 @@ Page({
    * 页面的初始数据
    */
   data: {
+    name: '李警官',
+    tel: '15055735530',
     msgEventLocation: 'test',
     msgAidLocation: 'test',
     msg: '110',
+    hintMsg: '警察正在赶来的路上！！',
     latitude: 39.989221,
     longitude: 116.306076,
     markers: [],
@@ -26,6 +29,29 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log(options.msg)
+    //从主页面获取
+    if (options.msg == 110) {
+      this.setData({
+        msg: options.msg,
+        hintMsg: '警察正在赶来的路上！！'
+      })
+    }
+    if (options.msg == 120) {
+      this.setData({
+        msg: options.msg,
+        hintMsg: '120正在赶来的路上！！'
+      })
+    }
+    if (options.msg == 119) {
+      this.setData({
+        msg: options.msg,
+        hintMsg: '消防员正在赶来的路上！！'
+      })
+    }
+    
+    this.initData()
+    this.driving()
       
   },
 
@@ -40,8 +66,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.initData()
-    this.driving()
+   
     
   },
 
@@ -114,7 +139,7 @@ Page({
           distance: ret.result.routes[0].distance,
           polyline: [{
             points: pl,
-            color: '#FF0000DD',
+            color: '#00BFFF',
             width: 6
           }]
         })
@@ -124,9 +149,13 @@ Page({
   },
   /**
    * 页面数据初始化
+   * 优先从本地获取
+   * 可以从网络获取
+   * 用户{报警类型，报警地点，报警坐标，救援方名称，救援方坐标}
    */
   initData(){
-    
+    //获取起点与终点坐标
+    //获取双方名称
     let markers = [];
     markers = wx.getStorageSync("markers")
     console.log(markers)
@@ -138,6 +167,8 @@ Page({
       msgEventLocation: markers[0].label.content,
       msgAidLocation: markers[markers.length-1].label.content,
     })
+    //获取报警类型
+
   },
   /**
    * 定时器回调函数

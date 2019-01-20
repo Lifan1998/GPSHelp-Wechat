@@ -12,7 +12,7 @@
   style="width: 100%; height: 100%;"
 >
 <cover-view  class='hint'>  
-  <cover-view class='hintMsg'>警察正在赶来的路上！！</cover-view>
+  <cover-view class='hintMsg'>{{hintMsg}}</cover-view>
 </cover-view>
 <cover-image src='/image/chat.jpg' class='chat_img'></cover-image>
 <cover-image class='currentLocation' src='/image/location-3.jpg' ></cover-image>
@@ -21,5 +21,12 @@
 <cover-view class='bottom'>
 <cover-view class='eventLocation' >· {{msgEventLocation}}</cover-view>
 <cover-view class='aidLocation'>· {{msgAidLocation}}</cover-view>
+<cover-view class='detail'>
+<cover-image src = '/image/id_image.jpeg' style='width:8vw;height:8vw;padding:10rpx'></cover-image>
+<cover-view>{{name}} {{tel}} </cover-view>
+<cover-image src = '/image/tel.jpg' style='width:5vw;height:5vw;font-size:30rpx;padding:10rpx'></cover-image>
+<cover-view style='color: blue'>拨打电话</cover-view>
+</cover-view> 
+<cover-view style='color:grey;padding:20rpx'>1 车 3 人</cover-view>
 <cover-view class='distance'>{{ distance}}米   约{{ duration}}分钟后到达</cover-view>
 </cover-view>

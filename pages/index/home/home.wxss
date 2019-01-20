@@ -44,13 +44,16 @@ page{
   background-color: white;
   font-size: 40rpx;
   padding: 10rpx;
-
+  white-space: pre-line;
+  display: block;
 }
 
 .aidLocation{
+  display: block;
   background-color: white;
   font-size: 40rpx;
   padding: 10rpx;
+  white-space: pre-line;
 }
 .bottom{
   background: white;

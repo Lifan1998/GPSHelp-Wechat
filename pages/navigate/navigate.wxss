@@ -18,17 +18,21 @@ Page{
   background-color: white;
   font-size: 40rpx;
   padding: 10rpx;
+  white-space: pre-line;
+  display: block;
 }
 
 .aidLocation{
   background-color: white;
   font-size: 40rpx;
   padding: 10rpx;
+  white-space: pre-line;
+  display: block;
 }
 .chat_img{
   position: absolute;
   display: flex;
-  top: 70vh;
+  top: 55vh;
   left: 83vw;
   width: 15vw;
   height: 15vw;
@@ -38,7 +42,7 @@ Page{
   position: absolute;
   background-color: white;
   display: flex;
-  top: 60vh;
+  top: 45vh;
   left: 86vw;
   width: 10vw;
   height: 10vw;
@@ -56,7 +60,7 @@ Page{
 }
 .hintMsg{
   background: orange;
-  font-size: 45rpx;
+  font-size: 35rpx;
   color: white;
   text-align: center;
   padding: 10px;
@@ -67,4 +71,13 @@ Page{
   text-align :right;
   color:blue;
   font-size: 35rpx;
+}
+.detail{
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
+
+  
 }
