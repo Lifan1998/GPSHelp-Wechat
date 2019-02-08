@@ -31,6 +31,7 @@ var timer ;
 /**
  * 呼救类型
  */
+
 var type;
 Page({
   
@@ -366,13 +367,7 @@ Page({
     })
     //手动测试请求成功
     if(sec==2){
-      //网络请求
-      //请求成功清除定时器
-      clearInterval(timer)
-      //打开导航页面，在该任务完成之前，主界面封锁
-      wx.redirectTo({
-        url: '/pages/navigate/navigate?msg='+type
-      })
+      this.startHelp()
     }
   },
   /**
@@ -380,14 +375,45 @@ Page({
    */
   startHelp(){
     //网络请求
+    
+    wx.login({
+      success: res => {
+        // 发送 res.code 到后台换取 openId, sessionKey, unionId      
+        var code = res.code;
+        console.log(res.code)
+        let appid = "wxa466fa6fe3836361";
+        let secret = "6b2cd5552ac166ea396a6e14ad4fda60"
+        let js_code = code
+        let url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + appid + "&secret=" + secret + "&js_code=" + js_code + "&grant_type=authorization_code"
 
+        wx.request({
+          url: url,
+         
+          success: function (res) {
+            if (res.statusCode == 200) {
+                console.log(res)
+                console.log("openid:"+res.data.openid)
+              console.log("session_key:"+ res.data.session_key)
+            } else {
+              console.log(res.statusCode);
+            }
+          },
+          fail: function () {
+            console.log("index.js wx.request CheckCallUser fail");
+          },
+          complete: function () {
+            // complete
+          }
+        })
+
+      }
+    })
     //请求成功清除定时器
     clearInterval(timer)
     //打开导航页面，在该任务完成之前，主界面封锁
     wx.redirectTo({
-      url: '../pages/navigate/navigate?msg='+type
+      url: '/pages/navigate/navigate?msg=' + type
     })
-
   },
   /**
    * 页面隐藏时调用
