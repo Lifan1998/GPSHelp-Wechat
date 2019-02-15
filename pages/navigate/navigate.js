@@ -5,6 +5,12 @@
  * 1为施救方
  */
 const userType = 0;
+const app = getApp();
+/**
+ * 定时器id
+ * 关闭时要用
+ */
+var timer;
 Page({
 
   /**
@@ -30,26 +36,7 @@ Page({
    */
   onLoad: function (options) {
     console.log(options.msg)
-    //从主页面获取
-    if (options.msg == 110) {
-      this.setData({
-        msg: options.msg,
-        hintMsg: '警察正在赶来的路上！！'
-      })
-    }
-    if (options.msg == 120) {
-      this.setData({
-        msg: options.msg,
-        hintMsg: '120正在赶来的路上！！'
-      })
-    }
-    if (options.msg == 119) {
-      this.setData({
-        msg: options.msg,
-        hintMsg: '消防员正在赶来的路上！！'
-      })
-    }
-    
+    this.updateLocation()
     this.initData()
     this.driving()
       
@@ -151,7 +138,8 @@ Page({
    * 页面数据初始化
    * 优先从本地获取
    * 可以从网络获取
-   * 用户{报警类型，报警地点，报警坐标，救援方名称，救援方坐标}
+   * 用户{任务类型，事故地点，事故坐标，救援方名称，救援方坐标，救援方姓名，救援方电话，救援方人数}
+   * 工作人员{任务类型，事故地点，事故坐标，救援方名称，救援方坐标}
    */
   initData(){
     //获取起点与终点坐标
@@ -167,17 +155,149 @@ Page({
       msgEventLocation: markers[0].label.content,
       msgAidLocation: markers[markers.length-1].label.content,
     })
-    //获取报警类型
+
+    let that = this
+    let url = "http://localhost:8088/jersey/users/getTask" + "?isWorker=" + app.globalData.isWorker +
+      "&openid=" + app.globalData.openid
+
+    wx.request({
+      url: url,
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success: function (res) {
+        if (res.statusCode == 200) {
+          console.log(res)
+          that.setData({
+            markers: [{
+              height: 40,
+              iconPath: "/image/location.png",
+              id: "0",
+              label: { content: res.data.event_location},
+              latitude: res.data.event_latitude,
+              longitude: res.data.event_longitude,
+              width:40},{
+
+              height: 40,
+              iconPath: "/image/marker-1.png",
+              id: "1",
+              label: { content: res.data.organization },
+                latitude: res.data.organization_latitude,
+                longitude: res.data.organization_longitude,
+              width: 40
+              }],
+            name: res.data.name,
+            tel: res.data.tel,
+            msgEventLocation:res.data.event_location,
+            msgAidLocation: res.data.organization,
+            latitude: res.data.event_latitude,
+            longitude: res.data.event_longitude
+
+          })
+          if (!app.globalData.isWorker) {
+            if (res.data.type == 110) {
+              that.setData({
+                msg: 110,
+                hintMsg: '警察正在赶来的路上！！'
+              })
+            }
+            if (res.data.type == 120) {
+              that.setData({
+                msg: 120,
+                hintMsg: '120正在赶来的路上！！'
+              })
+            }
+            if (res.data.type == 119) {
+              that.setData({
+                msg: 119,
+                hintMsg: '消防员正在赶来的路上！！'
+              })
+            }
+          }
+
+          
+
+        } else {
+          console.log(res.statusCode);
+        }
+
+      },
+      fail: function () {
+        console.log("index.js wx.request CheckCallUser fail");
+      },
+      complete: function () {
+        // complete
+      }
+    })
 
   },
   /**
    * 定时器回调函数
-   * 用户：获取对方定位，更新map
    */
   updateLocation(){
-     //应从服务器获取，返回值为坐标
-     //将获取坐标与坐标组比对
-  }
+     if(app.globalData.isWorker){
+       //返回用户坐标，导航信息{路线，时间，距离}
+       this.workerUpdateLocation();
+     } else{
+       // 返回救援方坐标，时间，距离
+       //this.userUpdateLocation();
+       timer = setInterval(this.userUpdateLocation, 1000);
+     }
+  },
+  /**
+   * 用户更新定位
+   * 获取救援方定位
+   * 获取时间与距离
+   */
+  userUpdateLocation(){
+    wx.getLocation({
+      type: 'gcj02',
+      success(res) {
+        console.log(res)
+
+        wx.request({
+          url: 'http://localhost:8088/jersey/users/userUpdateLocation',
+          method: 'POST',
+          header: {
+            'content-type': 'application/x-www-form-urlencoded' // 默认值
+          },
+          data: {
+            openid: 'oAxVW4yKShgrBl_SZXyZTWRgvNYk',
+            latitude: res.latitude,
+            longitude: res.longitude
+          },
+          success: function (result) {
+            if (result.statusCode == 200) {
+              console.log(result)
+
+            } else {
+              console.log(result.statusCode);
+            }
+          },
+          fail: function () {
+            console.log("网络请求失败");
+          },
+          complete: function () {
+            // complete
+          }
+        })
+
+      }
+    })
+
+
+    // 网络请求
+    
+  },
+  /**
+   * 工作人员更新定位
+   * 获取用户定位
+   * 导航事故地点
+   * 获取时间距离
+   */
+  workerupdateLocation() {
+
+  },
   
 
 
