@@ -29,6 +29,7 @@ Page({
     polyline: [],
     distance:0,
     duration:0,
+    otherOpenid: ""
   },
 
   /**
@@ -36,9 +37,9 @@ Page({
    */
   onLoad: function (options) {
     console.log(options.msg)
-    this.updateLocation()
     this.initData()
-    this.driving()
+    this.updateLocation()
+    //this.driving()
       
   },
 
@@ -168,6 +169,7 @@ Page({
       success: function (res) {
         if (res.statusCode == 200) {
           console.log(res)
+          
           that.setData({
             markers: [{
               height: 40,
@@ -191,7 +193,8 @@ Page({
             msgEventLocation:res.data.event_location,
             msgAidLocation: res.data.organization,
             latitude: res.data.event_latitude,
-            longitude: res.data.event_longitude
+            longitude: res.data.event_longitude,
+            otherOpenid: res.data.otherOpenid
 
           })
           if (!app.globalData.isWorker) {
@@ -237,11 +240,11 @@ Page({
   updateLocation(){
      if(app.globalData.isWorker){
        //返回用户坐标，导航信息{路线，时间，距离}
-       this.workerUpdateLocation();
+       timer = setInterval(this.workerUpdateLocation, 2000);
      } else{
        // 返回救援方坐标，时间，距离
        //this.userUpdateLocation();
-       timer = setInterval(this.userUpdateLocation, 1000);
+       timer = setInterval(this.userUpdateLocation, 2000);
      }
   },
   /**
@@ -250,6 +253,7 @@ Page({
    * 获取时间与距离
    */
   userUpdateLocation(){
+    let _this = this
     wx.getLocation({
       type: 'gcj02',
       success(res) {
@@ -259,17 +263,30 @@ Page({
           url: 'http://localhost:8088/jersey/users/userUpdateLocation',
           method: 'POST',
           header: {
-            'content-type': 'application/x-www-form-urlencoded' // 默认值
+            'content-type': 'application/x-www-form-urlencoded' 
           },
           data: {
             openid: 'oAxVW4yKShgrBl_SZXyZTWRgvNYk',
             latitude: res.latitude,
-            longitude: res.longitude
+            longitude: res.longitude,
+            otherOpenid:_this.data.otherOpenid
           },
           success: function (result) {
             if (result.statusCode == 200) {
               console.log(result)
-
+              let marker = {
+                iconPath: "/image/car.jpg",
+                id: "3",
+                latitude: result.data.latitude,
+                longitude: result.data.longitude,
+                height: 20,
+                width: 40
+              };
+              _this.setData({
+                markers: [_this.data.markers[0], _this.data.markers[1],marker],
+                duration: result.data.time,
+                distance: result.data.distance
+              })
             } else {
               console.log(result.statusCode);
             }
@@ -296,7 +313,66 @@ Page({
    * 获取时间距离
    */
   workerupdateLocation() {
+    var _this = this;
 
+    wx.getLocation({
+      type: 'gcj02',
+      success(res) {
+        console.log(res)
+          wx.request({
+            url: 'http://localhost:8088/jersey/users/workerUpdateLocation',
+            method: 'POST',
+            header: {
+              'content-type': 'application/x-www-form-urlencoded' // 默认值
+            },
+            data: {
+              openid:'oAxVW4yKShgrBl_SZXyZTWRgvNYk',
+              latitude: res.latitude,
+              longitude: res.longitude,
+              toLatitude: "",
+              toLongitude: "",
+              otherOpenid: _this.data.otherOpenid,
+            },
+            success: function (result) {
+              if (result.statusCode == 200) {
+                console.log(result)
+
+                var ret = res.data
+                console.log(ret)
+                if (ret.status != 0) return; //服务异常处理
+                var coors = ret.result.routes[0].polyline, pl = [];
+                //坐标解压（返回的点串坐标，通过前向差分进行压缩）
+                var kr = 1000000;
+                for (var i = 2; i < coors.length; i++) {
+                  coors[i] = Number(coors[i - 2]) + Number(coors[i]) / kr;
+                }
+                //将解压后的坐标放入点串数组pl中
+                for (var i = 0; i < coors.length; i += 2) {
+                  pl.push({ latitude: coors[i], longitude: coors[i + 1] })
+                }
+                //设置polyline属性，将路线显示出来
+                _this.setData({
+                  duration: ret.result.routes[0].duration,
+                  distance: ret.result.routes[0].distance,
+                  polyline: [{
+                    points: pl,
+                    color: '#00BFFF',
+                    width: 6
+                  }]
+                })
+              } else {
+                console.log(result.statusCode);
+              }
+            },
+            fail: function () {
+              console.log("网络请求失败");
+            },
+            complete: function () {
+              // complete
+            }
+          })
+      }
+    })
   },
   
 

@@ -37,7 +37,7 @@ App({
                   wx.redirectTo({
                     url: '/pages/navigate/navigate?msg=' + type
                   })
-                }
+                } 
               } else {
                 
                 if (isTask){
@@ -48,8 +48,8 @@ App({
                   })
                 }
               }
-              //普通用户无任务
-              //工作人员无任务
+              //普通用户无任务进入主界面
+              //工作人员无任务进入主界面
               
             } else {
               console.log(res.statusCode);
@@ -72,6 +72,7 @@ App({
   globalData: {
     userInfo: null,
     openid: null,
+    otherOpenid: "",
     session_key:null,
     isWorker: null
   }
