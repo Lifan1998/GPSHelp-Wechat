@@ -1,0 +1,171 @@
+/* pages/index/index.wxss */
+
+page {
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.confirmBtn {
+  position: absolute;
+  background-color: rgb(255, 255, 0);
+  border-radius: 15vw;
+  left: 35vw;
+  bottom: 18vh;
+  width: 30vw;
+  height: 30vw;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmText {
+  position: relative;
+  font-size: 40rpx;
+}
+
+.confirmType {
+  position: relative;
+  font-size: 40rpx;
+}
+
+.currentLocation {
+  position: absolute;
+  display: flex;
+  bottom: 18vh;
+  left: 88vw;
+  width: 10vw;
+  height: 10vw;
+}
+
+.about {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 28vh;
+  left: 88vw;
+  width: 10vw;
+  height: 10vw;
+}
+
+.eventLocation {
+  background-color: white;
+  font-size: 16px;
+  padding: 10rpx;
+  white-space: pre-line;
+  display: block;
+}
+
+.aidLocation {
+  display: block;
+  background-color: white;
+  font-size: 16px;
+  padding: 10rpx;
+  white-space: pre-line;
+}
+
+.bottom {
+  background: white;
+  position: absolute;
+  width: 730rpx;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10rpx;
+  bottom: 10rpx;
+  right: 10rpx;
+}
+
+.type {
+  background: white;
+  border: 10rpx;
+  font-size: 45rpx;
+  font-weight: bold;
+  width: 100rpx;
+  margin: 20rpx;
+  border-bottom-color: rgb(30, 30, 163);
+  border-radius: 15rem;
+}
+
+.types {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+/* 按钮未选中 */
+
+.normal_button {
+  border-radius: 10px;
+  margin: 20rpx;
+  background: white;
+  width: 25vw;
+}
+
+/* 按钮选中 */
+
+.checked_button {
+  border-radius: 10px;
+  margin: 20rpx;
+  background: #FF4040;
+  color: white;
+  width: 25vw;
+}
+
+.separation{
+  width: 100%;
+  height: 4rpx;
+  background-color: #f5f5f5
+}
+
+.mask {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #000;
+  z-index: 9000;
+  opacity: 0.7;
+}
+
+.aboutView {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.aboutInfo {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 15rpx;
+  padding: 20rpx
+}
+
+.aboutTitle{
+  font-size: 18px;
+  margin: 40rpx 10rpx 10rpx 10rpx
+}
+
+.aboutContent{
+  font-size: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap
+}
+
+.aboutBtn {
+  width: 60%;
+  height: 40px;
+  font-size: 16px;
+  background-color: #FF4500;
+  color: white;
+}

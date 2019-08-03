@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/navigate/navigate",
+    "pages/register/register",
+    "pages/chat/chatroom"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "GPS求救",
+    "navigationBarTextStyle": "black"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于救援定位"
+    }
+  },
+  "sitemapLocation": "sitemap.json"
+}

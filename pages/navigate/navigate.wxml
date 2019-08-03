@@ -1,0 +1,25 @@
+<!--pages/navigate/navigate.wxml-->
+<map id="map1" longitude="{{longitude}}" latitude="{{latitude}}" scale="16" markers="{{markers}}" bindmarkertap="markertap" polyline="{{polyline}}" bindregionchange="regionchange" show-location style="width: 100%; height:{{mapHeight}}rpx">
+  <cover-view class='hint'>
+    <cover-view class='hintMsg'>{{hintMsg}}</cover-view>
+  </cover-view>
+  <cover-image src='/image/chat.jpg' class='chat_img' bindtap='into_ChatRoom'></cover-image>
+  <cover-image class='currentLocation' src='/image/location-3.png' bindtap='locationTap'></cover-image>
+</map>
+<view class='bottom'>
+  <view class='detail'>
+    <image class='avatar' src='/image/id_image.png'></image>
+    <view class='detail_info'>
+      <view>
+        <text class='name'>{{name}}</text>
+        <text class='tel'>{{tel}}</text>
+        <image class='tel_ico' src='/image/call.png' bindtap='makeCall'></image>
+      </view>
+      <view class='distance'>距离 {{distance}} 米 约 {{duration}} 分钟后到达</view>
+    </view>
+  </view>
+  <scroll-view scroll-y style="height: 120rpx;">
+    <view class='eventLocation'>· {{msgEventLocation}}</view>
+    <view class='aidLocation'>· {{msgAidLocation}}</view>
+  </scroll-view>
+</view>

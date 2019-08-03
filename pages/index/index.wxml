@@ -1,0 +1,34 @@
+<!--pages/index/index.wxml-->
+<map id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="15" bindcontroltap="controltap" markers="{{markers}}" bindmarkertap="markertap" polyline="{{polyline}}" bindregionchange="regionchange" show-location style="width: 100%; height: 100%;">
+  <cover-view class='types' bindtap="type">
+    <block wx:for="{{buttons}}" wx:key="buttons">
+      <button class='{{item.checked?"checked_button":"normal_button"}}' data-id='{{item.id}}' bindtap='radioButtonTap'>{{item.name}}</button>
+    </block>
+  </cover-view>
+
+  <cover-view class='confirmBtn' bindtap="confirm">
+    <cover-view class='confirmText'>{{label}}
+      <cover-view class='comfirmType'>{{msg}}</cover-view>
+    </cover-view>
+  </cover-view>
+  <cover-image class='currentLocation' src='/image/location-3.png' bindtap="moveToLocation"></cover-image>
+  <cover-image class='about' src='/image/about.png' bindtap="showAbout"></cover-image>
+  <cover-view class='bottom'>
+    <cover-view class='eventLocation' bindtap='chooseEventLocation'>· {{msgEventLocation}}</cover-view>
+    <cover-view class="separation" />
+    <cover-view class='aidLocation'>· {{msgAidLocation}}</cover-view>
+  </cover-view>
+</map>
+<cover-view class="mask" catchtouchmove="preventTouchMove" wx:if="{{showAbout}}" bindtap='showAbout'></cover-view>
+<cover-view class="aboutView" wx:if="{{showAbout}}" bindtap='showAbout'>
+  <cover-view class="aboutInfo" wx:if="{{showAbout}}">
+  <cover-view class='aboutContent'>用户身份：{{userType}}\n</cover-view>
+  <cover-view class='aboutTitle'>如何求救?</cover-view>
+  <cover-view class='aboutContent'>1、选择求救类型 \n2、确认求救地点和救援单位 \n3、点击立即求救</cover-view>
+  <cover-view class='aboutTitle' wx:if="{{userType=='普通用户'}}">待注册的救援人员?</cover-view>
+  <button class='aboutBtn'wx:if="{{userType=='普通用户'}}" bindtap='workerRegister'>立即注册</button>
+  <cover-view class='aboutTitle' wx:if="{{userType=='救援人员（在线）' || userType=='救援人员（离线）'}}">切换工作状态</cover-view>
+  <button class='aboutBtn'wx:if="{{userType=='救援人员（在线）'}}" data-status='离线' catchtap='workerChange' >下线</button>
+  <button class='aboutBtn'wx:if="{{userType=='救援人员（离线）'}}" data-status='在线'catchtap='workerChange' >上线</button>
+  </cover-view>
+</cover-view>
